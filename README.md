@@ -6,7 +6,7 @@ A hands-on AWS lab demonstrating a Flask web application deployed on an Amazon E
 
 The focus of this portfolio project is **network isolation, least-privilege access, reliable application service management, and verifiable deployment evidence**. Screenshots represent the lab's configuration and tests at the time they were captured; they are not a claim of ongoing production availability.
 
-> Repository status: AWS infrastructure documentation and 25 sanitized evidence screenshots uploaded successfully. Application source code pending final security review. No credentials, SSH private keys, or environment files should be published.
+> Repository status: AWS architecture documentation, 25 sanitized deployment screenshots, reviewed Flask application source code, and security documentation have been uploaded successfully. The project demonstrates secure AWS networking, EC2 deployment, private RDS PostgreSQL connectivity, and application service management. This is an educational portfolio project, not a production-hardened deployment.
 
 ## Architecture
 
@@ -65,28 +65,37 @@ The evidence set is organized to show:
 - Gunicorn process, systemd unit, and restart/health check (`16`–`18`)
 - Subnet routing, associations and security groups (`19`–`25`)
 
-For all 25 expected screenshot filenames, see the [evidence checklist](evidence/README.md). Actual images are **not packaged** with this starter; copy them to `evidence/` after reviewing and redacting sensitive data.
+For all 25 expected screenshot filenames, see the [evidence checklist](evidence/README.md). All 25 sanitized evidence screenshots are available in the evidence/ directory.
 
 ## Repository layout
 
 ```text
-StartupExcuses-AWS-GitHub/
-├── README.md
+startup-excuses-aws-security/
 ├── .gitignore
+├── README.md
 ├── SECURITY.md
 ├── docs/
-│   ├── architecture.md          # Mermaid diagram, editable on GitHub
-│   ├── architecture.dot         # Graphviz diagram source
-│   ├── architecture.svg         # Rendered architecture diagram
-│   └── aws-cleanup.md           # Cost-aware teardown checklist
+│   ├── architecture.md
+│   ├── architecture.dot
+│   ├── architecture.svg
+│   ├── aws-cleanup.md
+│   └── source-security-review.md
 ├── evidence/
-│   ├── README.md                # Checklist of all 25 screenshots
-│   └── (add 01–25 PNG files here)
-└── scripts/
-    └── check-evidence.ps1       # Checks evidence completeness on Windows
+│   ├── README.md
+│   └── 01–25 PNG screenshots
+├── scripts/
+│   └── check-evidence.ps1
+└── src/
+    ├── .env.example
+    ├── README.md
+    ├── app.py
+    ├── requirements.txt
+    ├── startup-excuses.conf
+    └── templates/
+        └── index.html
 ```
 
-Application source is not present in this documentation bundle, and no source-code audit has been performed. Add only reviewed Flask application files, dependency manifests and sanitized configuration examples if you want to publish the code too.
+The reviewed Flask application source code is available in src/, including app.py, requirements.txt, Nginx configuration, HTML templates, and a safe .env.example configuration template. A source security review is documented in docs/source-security-review.md.
 
 ## Publish safely to GitHub
 
