@@ -6,7 +6,7 @@ A hands-on AWS lab demonstrating a Flask web application deployed on an Amazon E
 
 The focus of this portfolio project is **network isolation, least-privilege access, reliable application service management, and verifiable deployment evidence**. Screenshots represent the lab's configuration and tests at the time they were captured; they are not a claim of ongoing production availability.
 
-> **Repository status:** Documentation starter prepared. The 25 original screenshots and reviewed application source must be added separately. Never upload live credentials, SSH private keys, environment files, or secrets.
+> Repository status: AWS infrastructure documentation and 25 sanitized evidence screenshots uploaded successfully. Application source code pending final security review. No credentials, SSH private keys, or environment files should be published.
 
 ## Architecture
 
