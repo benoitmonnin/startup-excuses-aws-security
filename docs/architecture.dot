@@ -1,0 +1,30 @@
+digraph Architecture {
+  graph [label="StartupExcuses — AWS web application and private PostgreSQL database", labelloc=t, fontname="Arial", fontsize=19, bgcolor="white", pad=0.34, nodesep=0.55, ranksep=0.85, splines=polyline];
+  node [shape=box, style="rounded,filled", fontname="Arial", fontsize=11, margin="0.18,0.12", color="#6c8198", fillcolor="#f7f9fb", fontcolor="#183047"];
+  edge [fontname="Arial", fontsize=10, color="#5d7081", fontcolor="#34495c", arrowsize=0.8];
+  user [label="Internet user\nBrowser", shape=oval, fillcolor="#fdf2d7", color="#c99a42"];
+  igw [label="Internet Gateway\nPublic route: 0.0.0.0/0", fillcolor="#e5f2ff", color="#317abd"];
+  subgraph cluster_vpc {
+    label="AWS Europe (Paris)  eu-west-3   |   StartupExcuses-vpc 10.0.0.0/16";
+    style="rounded,filled"; color="#7e96aa"; fillcolor="#f5f8fc"; fontsize=14; fontname="Arial";
+    subgraph cluster_public {
+      label="PUBLIC SUBNETS"; style="rounded,filled"; color="#6ba4d1"; fillcolor="#eaf5ff";
+      web [label="eu-west-3a — 10.0.1.0/24\nEC2: StartupExcuses-WebServer (t3.micro)\nNginx → Gunicorn → Flask", fillcolor="#ffffff", color="#3880b5"];
+      publicb [label="eu-west-3b — 10.0.2.0/24\nPublic subnet (no additional web server claimed)", fillcolor="#ffffff", color="#3880b5"];
+    }
+    subgraph cluster_private {
+      label="PRIVATE DB SUBNETS (RDS subnet group)"; style="rounded,filled"; color="#71af91"; fillcolor="#e9f7ee";
+      privatea [label="eu-west-3a\n10.0.3.0/24", fillcolor="#ffffff", color="#3d9568"];
+      privateb [label="eu-west-3b\n10.0.4.0/24", fillcolor="#ffffff", color="#3d9568"];
+      db [label="Amazon RDS PostgreSQL\nstartupexcuses-db (db.t4g.micro)\nPrivate access · TCP 5432", fillcolor="#ffffff", color="#3d9568", shape=cylinder];
+      privatea -> db [style=dotted, arrowhead=none, color="#80ad92"];
+      privateb -> db [style=dotted, arrowhead=none, color="#80ad92"];
+    }
+    web -> db [label="Private connection · TCP 5432", color="#278d5d", penwidth=2, minlen=2];
+    publicb -> web [style=invis];
+  }
+  user -> igw [label="Web request"];
+  igw -> web [label="Public traffic", color="#317abd", penwidth=2];
+  legend [label="Security intent:\nWeb SG: only needed web/admin ingress\nDB SG: PostgreSQL only from web SG\nConfirm actual settings in evidence", shape=note, fillcolor="#fff7e9", color="#d9a448"];
+  legend -> db [style=dotted, arrowhead=none, constraint=false, color="#d9a448"];
+}
