@@ -1,0 +1,52 @@
+
+# StartupExcuses AWS Security Project
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+.pytest_cache/
+*.egg-info/
+
+# Secrets and credentials
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.secret
+secrets.json
+
+# AWS
+.aws/
+credentials.csv
+
+# Database files and backups
+*.db
+*.sqlite
+*.sqlite3
+*.sql
+*.dump
+*.backup
+
+# Logs and temporary files
+*.log
+*.tmp
+*.temp
+*.swp
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Archives
+*.zip
+*.tar
+*.tar.gz
