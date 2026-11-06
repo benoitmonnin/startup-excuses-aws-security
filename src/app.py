@@ -1,13 +1,44 @@
-import os
 
+import os
+from datetime import datetime, timezone
+
+import boto3
 import dotenv
 import psycopg2
 from flask import Flask, redirect, render_template, request, url_for
 from psycopg2 import sql
 
+
 dotenv.load_dotenv()
 
 app = Flask(__name__)
+
+
+# CloudWatch custom application metrics
+cloudwatch = boto3.client(
+    "cloudwatch",
+    region_name="eu-west-3"
+)
+
+
+def send_custom_metric(metric_name, value, unit="Count"):
+    try:
+        cloudwatch.put_metric_data(
+            Namespace="StartupExcuses/Application",
+            MetricData=[
+                {
+                    "MetricName": metric_name,
+                    "Value": value,
+                    "Unit": unit,
+                    "Timestamp": datetime.now(timezone.utc),
+                }
+            ],
+        )
+    except Exception:
+        app.logger.exception(
+            "Unable to publish CloudWatch metric: %s",
+            metric_name,
+        )
 
 
 # Database connection
@@ -81,17 +112,27 @@ def home():
                 "SELECT id, excuse, votes FROM excuses ORDER BY votes DESC LIMIT 10"
             )
             top_excuses = cur.fetchall()
+
+    send_custom_metric("PageViews", 1)
     return render_template("index.html", excuses=top_excuses)
 
 
 @app.route("/submit", methods=["POST"])
 def submit_excuse():
     excuse = request.form["excuse"]
+
     if excuse.strip():
         with get_db() as conn:
             with conn.cursor() as cur:
-                cur.execute("INSERT INTO excuses (excuse) VALUES (%s)", (excuse,))
+                cur.execute(
+                    "INSERT INTO excuses (excuse) VALUES (%s)",
+                    (excuse,)
+                )
+
+        send_custom_metric("ExcuseSubmissions", 1)
+
     return redirect(url_for("home"))
+
 
 
 @app.route("/vote/<int:excuse_id>")
